@@ -9,9 +9,8 @@ a line to /var/log/phpusage.csv with some basic usage statistics.
 Automatic logging
 -----------------
 For deplying it can be useful to enable automatic logging of all script
-execution. The included files *phpusage.ini* can be included in PHP
-configuration for automatic logging of all processes. Remember to update
-path.
+execution. The file *phpusage.ini* can be included in PHP configuration
+for automatic logging of all processes. Remember to update path.
 
 The script *auto_prepend_file.php* will simply call
 ```register_shutdown_function(array('PhpUsage', 'logUsage'));```.
