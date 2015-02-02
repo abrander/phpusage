@@ -66,3 +66,54 @@ LOAD DATA LOCAL INFILE "/var/log/phpusage.csv"
 ```
 
 The file *mysql-import.sql* contains a simple example of importing to MySQL.
+
+Example SQL queries
+-------------------
+
+#### Overview
+```sql
+SELECT
+	cmdline,
+	COUNT(1) AS called,
+	AVG(`real`) AS real_avg,
+	MAX(`real`) AS real_max,
+	AVG(iowait) AS iowait_avg,
+	MAX(iowait) AS iowait_max
+FROM phpusage
+GROUP BY cmdline;
+```
+
+#### Slowest
+```sql
+SELECT
+	cmdline,
+	COUNT(1) AS called,
+	AVG(`real`) AS real_avg
+FROM phpusage
+GROUP BY cmdline
+ORDER BY real_avg DESC;
+```
+
+#### Total time
+```sql
+SELECT
+	cmdline,
+	COUNT(1) AS called,
+	SUM(`real`) AS real_sum
+FROM phpusage
+GROUP BY cmdline
+ORDER BY real_sum DESC;
+```
+
+#### Total IO
+```sql
+SELECT
+	cmdline,
+	COUNT(1) AS called,
+	SUM(rchar)+SUM(wchar) AS io_bytes,
+	SUM(rchar) AS rchar_sum,
+	SUM(wchar) AS wchar_sum
+FROM phpusage
+GROUP BY cmdline
+ORDER BY io_bytes DESC;
+```
