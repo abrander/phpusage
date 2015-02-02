@@ -273,9 +273,11 @@ class PhpUsage {
 
 	/**
 	 * Log the script resource usage to CSV file
+	 * @param $pid integer The PID of the process to log usage for. Will
+	 *                     log current process if omitted
 	 */
-	public static function logUsage() {
-		$stats = self::calculateStats(0);
+	public static function logUsage($pid = 0) {
+		$stats = self::calculateStats($pid);
 
 		if (!$stats) {
 			error_log("Failed to aquire needed statistics for " . __CLASS__);
