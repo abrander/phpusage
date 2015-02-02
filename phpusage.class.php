@@ -63,7 +63,7 @@ class PhpUsage {
 		}
 
 		$pid = 0;
-		$stat = [];
+		$stat = array();
 
 		// Read format as defined in do_task_stat():
 		// http://lxr.free-electrons.com/source/fs/proc/array.c#L371
@@ -154,7 +154,7 @@ class PhpUsage {
 
 		$lines = explode("\n", trim($content));
 
-		$io = [];
+		$io = array();
 		foreach ($lines as $line) {
 			$parts = explode(": ", $line);
 			$io[$parts[0]] = $parts[1];
@@ -181,7 +181,7 @@ class PhpUsage {
 			return FALSE;
 		}
 
-		$sched = [];
+		$sched = array();
 
 		$lines = explode("\n", $content);
 		foreach ($lines as $line) {
@@ -230,7 +230,7 @@ class PhpUsage {
 	 *                     on error.
 	 */
 	public static function calculateStats($pid) {
-		$stats = [];
+		$stats = array();
 		$uptime = self::readUptime();
 
 		$cmdline = self::readCmdLine($pid);
