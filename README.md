@@ -1,6 +1,18 @@
 # phpusage
 Simple usage logger for php.
 
+An important note about CLK_TCK
+--------------------
+PhpUsage needs to know the number of clock tics per second. A value of 100 is hardcoded in
+```PhpUsage::CLK_TCK```. You should check if this is the case for your environment too:
+
+```sh
+$ getconf CLK_TCK
+100
+```
+
+If the system value is not 100 you must update ```PhpUsage::CLK_TCK``` to reflect the actual value.
+
 Manual logging
 --------------
 You can simply call ```PhpUsage::logUsage()``` and the class will write
