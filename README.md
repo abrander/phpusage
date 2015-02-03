@@ -35,6 +35,8 @@ Fields in the CSV file
 | pid     | Process ID of the process                                              |
 | start   | Start time of the process as a RFC2822-formatted date                  |
 | nice    | Nice value of process                                                  |
+| ruid    | [Real userid of process](http://en.wikipedia.org/wiki/User_identifier#Real_user_ID)            |
+| euid    | [Effective userid of process](http://en.wikipedia.org/wiki/User_identifier#Effective_user_ID)  |
 | real    | Time passed since process start                                        |
 | utime   | Time spend in user mode (excluding time spend by children) (seconds)   |
 | stime   | Time spend in kernel mode (excluding time spend by children) (seconds) |

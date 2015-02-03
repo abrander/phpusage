@@ -134,6 +134,45 @@ class PhpUsage {
 	}
 
 	/**
+	 * Read /proc/<PID>/status for a specific process. Currently only extracts
+	 * UID and GID.
+	 * @param $pid integer The PID to return stats for, setting this to 0 will
+	 *                     read current process stat.
+	 * @return array|FALSE An associative array of values read. Returns FALSE
+	 *                     on error.
+	 */
+	public static function readStatus($pid) {
+		if ($pid == 0)
+			$pid = 'self';
+
+		$content = file_get_contents("/proc/${pid}/status");
+
+		if ($content === FALSE) {
+			return FALSE;
+		}
+
+		$status = array();
+
+		$lines = explode("\n", $content);
+		foreach ($lines as $line) {
+			if (preg_match("/^Uid:\s+(?P<ruid>\d+)\s+(?P<euid>\d+)\s+(?P<suid>\d+)\s+(?P<fsuid>\d+)/", $line, $matches) === 1) {
+				$status['ruid'] = intval($matches['ruid']);
+				$status['euid'] = intval($matches['euid']);
+				$status['suid'] = intval($matches['suid']);
+				$status['fsuid'] = intval($matches['fsuid']);
+			}
+			else if (preg_match("/^Gid:\s+(?P<rgid>\d+)\s+(?P<egid>\d+)\s+(?P<sgid>\d+)\s+(?P<fsgid>\d+)/", $line, $matches) === 1) {
+				$status['rgid'] = intval($matches['rgid']);
+				$status['egid'] = intval($matches['egid']);
+				$status['sgid'] = intval($matches['sgid']);
+				$status['fsgid'] = intval($matches['fsgid']);
+			}
+		}
+
+		return $status;
+	}
+
+	/**
 	 * Read IO statistics for a specific process from /proc
 	 * @param $pid integer The PID to return stats for, setting this to 0 will
 	 *                     read current process stat.
@@ -235,6 +274,7 @@ class PhpUsage {
 
 		$cmdline = self::readCmdLine($pid);
 		$stat = self::readStat($pid);
+		$status = self::readStatus($pid);
 		$io = self::readIo($pid);
 		$sched = self::readSched($pid);
 
@@ -247,6 +287,9 @@ class PhpUsage {
 		if (!$stat)
 			return FALSE;
 
+		if (!$status)
+			return FALSE;
+
 		if (!$io)
 			return FALSE;
 
@@ -256,6 +299,8 @@ class PhpUsage {
 		$stats['pid'] = $stat['pid'];
 		$stats['start'] = date('c', time() - ($uptime - ($stat['starttime'] / self::CLK_TCK)));
 		$stats['nice'] = $stat['nice'];
+		$stats['ruid'] = $status['ruid'];
+		$stats['euid'] = $status['euid'];
 		$stats['real'] = $uptime - ($stat['starttime'] / self::CLK_TCK);
 		$stats['utime'] = $stat['utime'] / self::CLK_TCK;
 		$stats['stime'] = $stat['stime'] / self::CLK_TCK;
