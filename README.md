@@ -59,6 +59,8 @@ CREATE TABLE phpusage (
 	pid int(11),
 	start timestamp,
 	nice int(11),
+	ruid int(11),
+	euid int(11),
 	`real` float,
 	utime float,
 	stime float,
